@@ -31,7 +31,23 @@ public class BaseRequest {
                           .headers(headers)
                           .body(body)
                           .when()
-                          .post(endPoint);
+                          .put(endPoint);
+    }
+
+    /**
+     * This is a function to delete an element using rest-assured
+     *
+     * @param endpoint api url
+     * @param headers  a map of headers
+     *
+     * @return Response
+     */
+    protected Response requestDelete(String endpoint, Map<String, ?> headers) {
+        return RestAssured.given()
+                .contentType(Constants.VALUE_CONTENT_TYPE)
+                .headers(headers)
+                .when()
+                .delete(endpoint);
     }
 
     protected Map<String, String> createBaseHeaders() {

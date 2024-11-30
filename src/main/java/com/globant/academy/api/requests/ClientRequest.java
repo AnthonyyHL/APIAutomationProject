@@ -57,7 +57,7 @@ public class ClientRequest extends BaseRequest {
         Client randomClient = new Client();
         randomClient.setId(id);
         randomClient.setName(faker.name().firstName());
-        randomClient.setLastname(faker.name().lastName());
+        randomClient.setLastName(faker.name().lastName());
         randomClient.setEmail(faker.internet().emailAddress());
         randomClient.setPhone(faker.phoneNumber().cellPhone());
         randomClient.setCity(faker.address().city());

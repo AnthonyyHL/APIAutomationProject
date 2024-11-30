@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Client {
     private String name;
-    private String lastname;
+    private String lastName;
     private String country;
     private String city;
     private String email;

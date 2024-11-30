@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 public class Resource {
     private String name;
     private String trademark;
-    private int stock;
-    private double price;
+    private String stock;
+    private String price;
     private String description;
     private String tags;
-    private boolean active;
+    private String active;
+    private String id;
 }

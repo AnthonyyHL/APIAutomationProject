@@ -24,6 +24,7 @@ public class ClientSteps {
     private List<Client> clientList;
     private Client client;
     private String storedPhoneNumber;
+    private String clientId;
 
     @Given("there are {int} or more registered clients")
     public void thereAreNOrMoreRegisteredClients(int clientsQuantity) {
@@ -71,6 +72,7 @@ public class ClientSteps {
         client.setPhone(newPhoneNumber);
         response = clientRequest.updateClient(client, client.getId());
         Assert.assertEquals(200, response.getStatusCode());
+        logger.info(String.format("Phone number successfully updated to: %s", newPhoneNumber));
     }
 
     @Then("the response should have a status code of {int}")
@@ -96,5 +98,51 @@ public class ClientSteps {
             response = clientRequest.deleteClient(client.getId());
             Assert.assertEquals(200, response.getStatusCode());
         }
+    }
+
+    @When("I create a new client sending a POST request")
+    public void iCreateANewClientSendingAPOSTRequest() {
+        response = clientRequest.getClients();
+        clientList = clientRequest.getClientsEntity(response);
+        String starterId = String.valueOf(clientList.size() + 1);
+        Assert.assertEquals(200, response.getStatusCode());
+
+        client = clientRequest.createRandomClient(starterId);
+        response = clientRequest.createClient(client);
+
+        logger.info(response.jsonPath().prettify());
+
+        Assert.assertEquals(201, response.getStatusCode());
+    }
+
+    @And("I search for the new client in the system")
+    public void iSearchForTheNewClientInTheSystem() {
+        response = clientRequest.getClients();
+        clientList = clientRequest.getClientsEntity(response);
+        Assert.assertEquals(200, response.getStatusCode());
+
+        for (Client client : clientList) {
+            if (client.getId().equals(this.client.getId())) {
+                Assert.assertEquals(client, this.client);
+                logger.info(String.format("Client %s was successfully found", client.getName()));
+                this.client = client;
+            }
+        }
+    }
+
+    @And("I update the {string} parameter of the new client with the following value: {string}")
+    public void iUpdateARandomParameterOfTheNewClient(String parameter, String newValue) {
+        clientId = client.getId();
+        Client updatedClient = clientRequest.updateParameter(client, parameter, newValue);
+
+        response = clientRequest.updateClient(updatedClient, clientId);
+        Assert.assertEquals(200, response.getStatusCode());
+        logger.info(String.format("Parameter \"%s\" with value \"%s\" in the new client", parameter, newValue));
+        logger.info(response.jsonPath().prettify());
+    }
+
+    @And("I remove the new client from the system")
+    public void iRemoveTheNewClientFromTheSystem() {
+        response = clientRequest.deleteClient(clientId);
     }
 }
